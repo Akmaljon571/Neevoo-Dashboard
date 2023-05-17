@@ -1,9 +1,10 @@
+import Routers from '../../routes/routes'
 import './main.scss'
 
 function Main() {
     return (
-        <main> 
-           Main
+        <main className='main'> 
+           <Routers/>
         </main>
     )
 }

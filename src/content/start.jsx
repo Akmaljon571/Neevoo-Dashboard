@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 
 export const State = createContext()
-
+export const host = 'https://api.neevoo.uz/v1'
 
 export const StatePriveder = ({ children }) => {
 
