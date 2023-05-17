@@ -5,22 +5,45 @@ import {
     UsergroupAddOutlined,
     VideoCameraAddOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
-import { useState } from 'react';
+import { Layout, Menu } from 'antd';
+import { useEffect, useState } from 'react';
 import home from '../img/logo.svg'
 import { Main, Header } from '../components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './layout.scss'
-import { useNavigate } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
 const LayOut = () => {
+    const defaultLocation = useLocation().pathname
     const [collapsed, setCollapsed] = useState(false);
-    const [navbar, setNavbar] = useState('Xisobot');
+    const [location, setLocation] = useState();
     const navigate = useNavigate()
 
+    useEffect(() => {
+        switch (defaultLocation) {
+            case '/':
+                setLocation('Xisobot')
+                break;
+            case '/category':
+                setLocation('Category')
+                break;
+            case '/course':
+                setLocation('Course')
+                break;
+            case '/video':
+                setLocation('Videos')
+                break;
+            case '/user':
+                setLocation('Users')
+                break;
+            default:
+                setLocation('Xisobot')
+                break;
+        }
+    }, [defaultLocation, setLocation]);
+
     const handleNavigate = (e) => {
-        setNavbar(e.key)
         switch (e.key) {
             case 'Xisobot':
                 navigate('/')
@@ -56,7 +79,7 @@ const LayOut = () => {
                     theme="dark"
                     mode="inline"
                     onClick={handleNavigate}
-                    defaultSelectedKeys={['Xisobot']}
+                    defaultSelectedKeys={[defaultLocation === '/' ? 'Xisobot' : defaultLocation === '/category' ? 'Category' : defaultLocation === '/course' ? 'Course' : defaultLocation === '/course' ? "Course" : defaultLocation === '/video' ? 'Videos' : defaultLocation === '/user' ? 'Users' : 'Xisobot']}
                     items={[
                         {
                             key: 'Xisobot',
@@ -87,7 +110,7 @@ const LayOut = () => {
                 />
             </Sider>
             <Layout>
-                <Header>{navbar}</Header>
+                <Header>{location}</Header>
                 <Content
                     style={{
                         margin: '0px 16px',
