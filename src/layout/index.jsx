@@ -44,6 +44,10 @@ const LayOut = () => {
     }, [defaultLocation, setLocation]);
 
     const handleNavigate = (e) => {
+        const token = JSON.parse(localStorage.getItem('adminToken'))
+        if (!token) {
+            window.location.reload(true)
+        } 
         switch (e.key) {
             case 'Xisobot':
                 navigate('/')
