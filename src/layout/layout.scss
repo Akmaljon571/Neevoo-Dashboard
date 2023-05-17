@@ -1,0 +1,32 @@
+.home {
+    display: flex;
+    align-items: center;
+
+
+    &-icon {
+        margin: 20px;
+        cursor: pointer;
+    }
+    
+    &-span {
+        font-family: Inter;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 29px;
+        letter-spacing: 0.8595330119132996px;
+        text-align: left;
+        color: #fff;
+        cursor: pointer;
+        width: 80px;
+        height: 53px;
+        display: block;
+    }
+
+    &-border {
+        margin: 0 5px;
+        margin-bottom: 30px;
+        border: none;
+        border-bottom: 0.1px solid #ffffffbd;
+        background-color: transparent;
+    }
+}

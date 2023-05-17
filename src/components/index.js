@@ -1,5 +1,4 @@
-import Footer from "./footer/footer";
-import Header from "./header/header";
 import Main from "./main/main";
+import Header from "./header/header";
 
-export { Header, Main, Footer }
+export { Main, Header }

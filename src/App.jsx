@@ -7,7 +7,7 @@ function App() {
 
     return (
       <>
-        {token ? <Prive /> : <Public />}
+        {!token ? <Prive /> : <Public />}
       </>
     )
 }

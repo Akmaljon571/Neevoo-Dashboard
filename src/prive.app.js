@@ -1,12 +1,8 @@
-import { Header, Main, Footer } from './components'
+import LayOut from './layout';
 
 function Prive() {
     return ( 
-        <>
-            <Header />
-            <Main />
-            <Footer />
-        </>
+        <LayOut/>
     );
 }
 
