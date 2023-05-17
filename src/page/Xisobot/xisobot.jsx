@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import xisobotIcon from '../../img/icon.svg'
 import { host } from '../../content/start';
 import './xisobot.scss'
+import Statistics from './statistika';
 
 function Xisobot() {
     const [count, setCount] = useState({});
@@ -15,7 +16,7 @@ function Xisobot() {
     return (  
         <div className='xisobot'>
             <ul>
-                <li>
+                <li style={{marginRight: '80px'}}>
                     <span>Jami O'quvchilar:</span>
                     <p>{count?.user} ta</p>
                     <img src={xisobotIcon} alt="" />
@@ -25,7 +26,7 @@ function Xisobot() {
                     <p>{count?.video} ta</p>
                     <img src={xisobotIcon} alt="" />
                 </li>
-                <li>
+                <li style={{marginRight: '80px'}} >
                     <span>Jami Yo'nalishlar:</span>
                     <p>{count?.yonalish} ta</p>
                     <img src={xisobotIcon} alt="" />
@@ -36,6 +37,7 @@ function Xisobot() {
                     <img src={xisobotIcon} alt="" />
                 </li>
             </ul>
+            <Statistics />
         </div>
     );
 }

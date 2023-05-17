@@ -3,7 +3,8 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 100px;
+        gap: 80px;
+        margin-bottom: 35px;
 
         li {
             width: 545px;
@@ -37,8 +38,70 @@
                 position: absolute;
                 bottom: 20px;
                 right: 20px;
-                
+
             }
         }
     }
 }
+  
+  .title {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+    color: #fff;
+  }
+  
+  .statistika {
+    background: rgba(255, 255, 255, 0.422);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 32px;
+    border-radius: 20px;
+  }
+  
+  .card_statistika {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-bottom: 32px;
+  
+    .item {
+      width: 545px;
+      height: 228px;
+      background: #ffffff;
+      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+      border-radius: 20px;
+      position: relative;
+      font-family: Inter;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 44px;
+      letter-spacing: -1px;
+      text-align: left;
+      padding: 20px;
+      color: rgba(0, 0, 255, 0.775);
+  
+      img {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        bottom: 20px;
+        right: 20px;
+      }
+  
+      span {
+        font-family: Inter;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 39px;
+        letter-spacing: -1px;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.675);
+        white-space: nowrap;
+      }
+    }
+  }
+  
