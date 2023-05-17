@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import { Xisobot } from "../page";
+import { Videos, Xisobot } from "../page";
 
 function Routers() {
     return (  
         <Routes>
             <Route path="/" element={<Xisobot />} />
-            {/* <Route path="/" element={} /> */}
+            <Route path="/video" element={<Videos />} />
         </Routes>
 
     );

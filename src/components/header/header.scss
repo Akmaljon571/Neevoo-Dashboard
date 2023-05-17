@@ -1,13 +1,18 @@
 header {
     background-color: #fff !important;
     height: 70px;
-    padding: 20px;
+    padding: 20px 40px 20px 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     img {
-        margin-left: 400px;
         cursor: pointer;
+    }
+
+    svg {
+        cursor: pointer;
+        fill: #01265F;
     }
 
     h1 {
