@@ -9,7 +9,7 @@ import { Popover } from "antd";
 function Course() {
   const [category, setCategory] = useState([]);
   const [course, setCourse] = useState([]);
-  const [deletee, setDelete] = useState([]);
+  const [count, setCount] = useState(0);
   const [one, setOne] = useState({});
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function Course() {
         setCategory(data);
         setOne(data[0]);
       });
-  }, []);
+  }, [count]);
 
   useEffect(() => {
     if (one?.id) {
@@ -39,16 +39,16 @@ function Course() {
   };
 
   const deleteCourse = (id) => {
-    const token = localStorage.getItem("adminToken");
+    const token = JSON.parse(localStorage.getItem("adminToken"));
     fetch(host + `/courses/delete/${id}`, {
       method: "DELETE",
       headers: {
         autharization: token,
       },
     })
-      .then((res) => res.json())
-      .then((data) => setDelete(data));
+      .then((data) => setCount(count + 1));
   };
+
 
   return (
     <>
@@ -85,7 +85,6 @@ function Course() {
               style={{ display: "none" }}
               type="file"
               name=""
-              placeholder="Yuklash"
             />
           </label>
 
@@ -128,6 +127,7 @@ function Course() {
             <p>Title</p>
             <p>Language</p>
             <p>Description</p>
+            <p className="more">More</p>
           </li>
           {course &&
             course.map((e, i) => {
