@@ -16,6 +16,7 @@ function InputVideo () {
   const [courseId, setCourseId] = useState(0);
   const [course, setCourse] = useState([])
   const [count, setCount] = useState();
+  const [file, setFile] = useState();
 
   useEffect(() => {
     fetch(host + '/courses')
@@ -25,6 +26,12 @@ function InputVideo () {
         setCourseId(data[0].id)
       })
   }, [setCourse, token,])
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
 
   const sent = () => {
     const title = sar.current.value
@@ -89,7 +96,7 @@ function InputVideo () {
   return (
     <>
       <div className='inputs_course'>
-        <h1>Yengi Video Qo'shish</h1>
+        <h1>Yangi video qo'shish</h1>
         <ul>
           <li>
             <span>Text</span>
@@ -118,13 +125,21 @@ function InputVideo () {
           <li className='rasm'>
             <span>Video</span>
             <label htmlFor='rasm'>
-              <i>Yuklash</i>
+              <i className="file_name">{file?.name ? file?.name : 'Yukla'}</i>
               <img src={yukla} alt='yukla' />
             </label>
-            <input id='rasm' ref={rasmi} className='none' type='file' />
+            <input
+              className="title_input"
+              style={{ display: "none" }}
+              ref={rasmi}
+              type="file"
+              onChange={handleFileChange}
+              placeholder="category image"
+              id='rasm'
+            />
           </li>
           <li>
-            <button onClick={sent}>Jonatish</button>
+            <button onClick={sent}>Qo'shish</button>
           </li>
         </ul>
         {contextHolder}
