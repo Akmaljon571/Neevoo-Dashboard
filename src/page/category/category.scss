@@ -1,0 +1,139 @@
+.title_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  margin-left: 92px;
+}
+
+.category_title {
+  margin-left: 92px;
+  width: 492px;
+  height: 40px;
+  left: 346px;
+  top: 105px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: 0.02em;
+  color: #0061f7;
+}
+
+.span_category {
+  display: block;
+  margin-bottom: 29px;
+  width: 233px;
+  height: 24px;
+  left: 346px;
+  top: 177px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+}
+
+.title_input {
+  width: 320px;
+  height: 48px;
+  left: 346px;
+  top: 217px;
+  background: #ffffff;
+  border: 1px solid rgba(47, 73, 209, 0.6);
+  padding: 10px 5px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  outline: none;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+
+  .placeholder_title {
+    outline: none;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .textarea {
+    // width: 685px;
+    background: #ffffff;
+    border: 1px solid rgba(47, 73, 209, 0.6);
+    border-radius: 8px;
+    outline: none;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+    outline: none;
+  }
+
+  .p {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.02em;
+    color: #000000;
+    margin-bottom: 10px;
+    margin-left: 5px;
+  }
+}
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-left: 92px;
+  margin-top: 32px;
+}
+
+.add_button {
+  width: 314px;
+  height: 48px;
+  left: 1043px;
+  top: 424px;
+  background: #2f49d1;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.button_text {
+  display: block;
+  margin: auto;
+  width: 76px;
+  height: 22px;
+  left: 1162px;
+  top: 437px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.file_name {
+  height: 22px;
+  left: 1049px;
+  top: 357px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #333;
+}
