@@ -31,7 +31,6 @@ function Category() {
     };
 
    let response = await axios.post("/categories/create",formData)
-console.log(response)
     // fetch(host + "/categories/create", requestOptions)
     //   .then((re) => re.ok && re.json())
     //   .then((data) => console.log(data));
@@ -61,7 +60,6 @@ console.log(response)
             <p className="p span_category">Course description </p>
             <textarea
               className="textarea title_input"
-              name=""
               ref={descriptionRef}
               placeholder="Description"
             ></textarea>

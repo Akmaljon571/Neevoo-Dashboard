@@ -1,16 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { host } from "../../content/start";
-import search from "../../img/search.svg";
+import search2 from "../../img/search.svg";
 import dot from "../../img/more.png";
 import download from "../../img/bx_download.svg";
 import "./course.scss";
 import { Popover } from "antd";
+import axios from "../../utils/axios";
 
 function Course() {
   const [category, setCategory] = useState([]);
   const [course, setCourse] = useState([]);
-  const [deletee, setDelete] = useState([]);
+  const [search, setSearch] = useState([]);
+  const [count, setCount] = useState(0);
   const [one, setOne] = useState({});
+  const [file, setFile] = useState();
+  const titleRef = useRef();
+  const descriptionRef = useRef();
+  const langRef = useRef();
+  const shef = useRef();
+  const categoryRef = useRef();
+  const input = useRef();
+  const token = JSON.parse(localStorage.getItem("adminToken"));
 
   useEffect(() => {
     fetch(host + "/categories/list")
@@ -19,7 +29,7 @@ function Course() {
         setCategory(data);
         setOne(data[0]);
       });
-  }, []);
+  }, [count]);
 
   useEffect(() => {
     if (one?.id) {
@@ -39,16 +49,69 @@ function Course() {
   };
 
   const deleteCourse = (id) => {
-    const token = localStorage.getItem("adminToken");
     fetch(host + `/courses/delete/${id}`, {
       method: "DELETE",
       headers: {
         autharization: token,
+        "Content-Type": "application/json",
       },
-    })
-      .then((res) => res.json())
-      .then((data) => setDelete(data));
+    }).then(() => setCount(count - 1));
   };
+
+  const send = () => {
+    const title = titleRef.current.value;
+    const categoryRef = titleRef.current.value;
+    const langRef = titleRef.current.value;
+    const descriptionRef = titleRef.current.value;
+    const file = photo.current.files[0];
+
+    if (titleRef && categoryRef && langRef && descriptionRef && file) {
+      let formData = new FormData();
+      formData.append("title", title);
+      formData.append("category ", category);
+      formData.append("lang", langRef);
+      formData.append("description", descriptionRef);
+      formData.append("file", file);
+
+      fetch(host + "/courses/create", {
+        method: "POST",
+        headers: {
+          autharization: token,
+        },
+        body: formData,
+      }).then((data) => {
+        if (data.ok) {
+          setCount(count + 1);
+        }
+      });
+    }
+  };
+
+  // const submit = async (e) => {
+  //   e.preventDefault();
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //       autharization: token,
+  //     },
+  //     body: formData,
+  //   };
+
+  //   let response = await axios.post("/courses/create", formData);
+  //   console.log(response);
+  //   // fetch(host + "/categories/create", requestOptions)
+  //   //   .then((re) => re.ok && re.json())
+  //   //   .then((data) => console.log(data));
+  // };
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+
 
   return (
     <>
@@ -58,12 +121,12 @@ function Course() {
         <form>
           <div>
             <p>Course nomi</p>
-            <input type="text" name="" placeholder="Nomi" />
+            <input ref={titleRef} type="text" placeholder="Nomi" />
           </div>
 
           <div>
             <p>Course tili</p>
-            <select name="">
+            <select ref={langRef} name="">
               <option value="uz">Uz</option>
               <option value="en">Ru</option>
               <option value="ru">En</option>
@@ -72,7 +135,7 @@ function Course() {
 
           <div>
             <p>Course category</p>
-            <input type="text" name="" placeholder="Category" />
+            <input ref={categoryRef} type="text" placeholder="Category" />
           </div>
 
           <label style={{ marginTop: "20px" }}>
@@ -82,20 +145,21 @@ function Course() {
               <img src={download} alt="" />
             </p>
             <input
+              ref={shef}
+              onChange={handleFileChange}
               style={{ display: "none" }}
               type="file"
-              name=""
               placeholder="Yuklash"
             />
           </label>
 
           <div className="box">
             <p>Course description </p>
-            <textarea name="" placeholder="Description"></textarea>
+            <textarea ref={descriptionRef} placeholder="Description"></textarea>
           </div>
 
           <div>
-            <button>Qo’shish</button>
+            <button onClick={send}>Qo’shish</button>
           </div>
         </form>
 
@@ -117,8 +181,12 @@ function Course() {
             </select>
           </div>
           <div className="absulute">
-            <img src={search} alt="search img" />
-            <input type="search" name="" placeholder="Search" />
+            <img src={search2} alt="search img" />
+            <input
+              type="search"
+              ref={input}
+              placeholder="Search"
+            />
           </div>
         </div>
 
