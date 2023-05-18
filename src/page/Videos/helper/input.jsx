@@ -44,7 +44,6 @@ function InputVideo () {
       type: 'loading',
       content: 'Loading...'
     })
-    setLoader(true)
     if (title && price && bgcolor && sequence && file) {
       const formData = new FormData()
       formData.append('file', file)
@@ -52,7 +51,8 @@ function InputVideo () {
       formData.append('sequence', sequence)
       formData.append('video_duration', price)
       formData.append('video_course', bgcolor)
- 
+      
+      setLoader(true)
       fetch(host + '/video/create', {
         method: 'POST',
         headers: {
