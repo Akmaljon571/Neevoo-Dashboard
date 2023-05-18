@@ -52,7 +52,7 @@ function InputVideo () {
       formData.append('sequence', sequence)
       formData.append('video_duration', price)
       formData.append('video_course', bgcolor)
-
+ 
       fetch(host + '/video/create', {
         method: 'POST',
         headers: {
