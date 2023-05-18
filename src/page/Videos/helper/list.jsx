@@ -1,27 +1,31 @@
 import { DeleteOutlined } from '@ant-design/icons'
-import { Popconfirm, message, Result } from 'antd'
+import { Popconfirm, message, Result, Popover } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { host } from '../../../content/start'
+import dot from "../../../img/more.png";
 
-function ListVideo(obj) {
-  const [coursId, setCourseId] = useState(obj.children);
+function ListVideo() {
+  const [coursId, setCourseId] = useState(0);
   const img_url = 'https://storage.googleapis.com/course_hunter/'
   const [messageApi, contextHolder] = message.useMessage()
   const [active, setActive] = useState(false)
+  const [count, setCount] = useState(0)
   const [video, setVideo] = useState([])
   const token = JSON.parse(localStorage.getItem('adminToken'))
   const key = 'updatable'
   const [course, setCourse] = useState([])
-  const videoRef = useRef(null)
+  const shef = useRef()
 
   useEffect(() => {
     fetch(host + '/courses')
       .then(re => re.json())
       .then(data => {
         setCourse(data)
-        setCourseId(data[0].id)
+        if (!course.length) {
+          setCourseId(data[0].id)
+        }
       })
-  }, [setCourse, token,])
+  }, [setCourse, token, count])
 
   useEffect(() => {
     if (coursId) {
@@ -34,7 +38,7 @@ function ListVideo(obj) {
         .then(re => re.json())
         .then(data => setVideo(data))
     }
-  }, [coursId, setVideo, token])
+  }, [coursId, setVideo, token, count])
 
   const videoDelete = id => {
     messageApi.open({
@@ -50,6 +54,7 @@ function ListVideo(obj) {
       }
     }).then(baza => {
       if (baza.ok) {
+        setCount(count + 1)
         setTimeout(() => {
           messageApi.open({
             key,
@@ -75,9 +80,13 @@ function ListVideo(obj) {
 
   const handleOpenVideo = (link) => {
     setActive(true)
-    // videoRef.current?.src = img_url + link
-    // videoRef.current.load();
+    setTimeout(() => {
+      shef.current.src = img_url + link
+      shef.current.load();
+      console.log(shef)
+    }, 10);
   }
+
   return (
     <>
       {contextHolder}
@@ -106,27 +115,38 @@ function ListVideo(obj) {
         <tbody>
           {video.length ? (
             video.map((e, i) => (
-              <tr onClick={() => handleOpenVideo(e.link)} key={i}>
-                <td>{i + 1}</td>
-                <td style={{ fontWeight: 700 }}>{e.text}</td>
-                <td>{e.duration}</td>
-                <td>{e.sequence} chi</td>
+              <tr key={i}>
+                <td onClick={() => handleOpenVideo(e.link)}>{i + 1}</td>
+                <td onClick={() => handleOpenVideo(e.link)} style={{ fontWeight: 700 }}>{e.text}</td>
+                <td onClick={() => handleOpenVideo(e.link)}>{e.duration}</td>
+                <td onClick={() => handleOpenVideo(e.link)}>{e.sequence} chi</td>
                 <td>
-                  <Popconfirm
-                    title="O'chirmoqchimisz?"
-                    onConfirm={() => videoDelete(e.video_id)}
-                    onCancel={cancel}
-                    okText='Yes'
-                    cancelText='No'
+
+                  <Popover
+                    content={
+                      <div>
+                        <div>
+                          <button className="upd">Update</button>
+                        </div>
+                        <Popconfirm
+                          title="O'chirmoqchimisz?"
+                          onConfirm={() => videoDelete(e.id)}
+                          onCancel={cancel}
+                          okText='Yes'
+                          cancelText='No'
+                        >
+                          <button
+                            className="dlt"
+                          >
+                            Delete
+                          </button>
+                        </Popconfirm>
+                      </div>
+                    }
+                    trigger="click"
                   >
-                    <DeleteOutlined
-                      style={{
-                        color: 'red',
-                        cursor: 'pointer',
-                        fontSize: '22px'
-                      }}
-                    />
-                  </Popconfirm>
+                    <img src={dot} alt="" width={20} height={20} />
+                  </Popover>
                 </td>
               </tr>
             ))
@@ -151,9 +171,9 @@ function ListVideo(obj) {
         <>
           <video
             controls
+            ref={shef}
             muted
-            onCanPlayThrough={() => videoRef.current?.play()}
-            ref={videoRef}
+            onCanPlayThrough={() => shef.current.play()}
             autoPlay={'autoplay'}
             preload='auto'
             loop
