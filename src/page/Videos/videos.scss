@@ -1,0 +1,196 @@
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+    margin-bottom: 50px;
+    overflow: auto;
+
+    th,
+    td {
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .th {
+        background-color: #01265F;
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: center;
+        padding: 20px;
+        color: #fff;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(0, 28, 175, 0.1);
+    }
+
+    td {
+        border-bottom: 1px solid #ddd;
+    }
+}
+
+.none {
+    display: none;
+}
+
+.videoSelect {
+    width: 250px;
+    margin-top: 100px;
+    background: #ffffff;
+    border-radius: 8px;
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    height: 48px;
+    padding: 13px;
+    outline: none;
+    appearance: none;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    border: none !important;
+}
+
+.inputs_course {
+    position: relative;
+
+    h1 {
+        font-family: Inter;
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 48px;
+        letter-spacing: 0.02em;
+        text-align: left;
+        color: #01265F;
+        margin-top: 32px;
+        margin-left: 40px;
+        margin-bottom: 32px;
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        margin: 0 40px;
+        flex-wrap: wrap;
+        color: rgb(60, 57, 57);
+
+        li {
+            width: 320px;
+            height: 88px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-direction: column;
+
+            span {
+                font-family: Inter;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 24px;
+                letter-spacing: 0.02em;
+                text-align: left;
+            }
+
+            input,
+            select {
+                width: 100%;
+                background: #ffffff;
+                border: 1px solid #01265F;
+                border-radius: 8px;
+                font-family: Inter;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 22px;
+                letter-spacing: 0em;
+                text-align: left;
+                height: 48px;
+                padding: 13px;
+                outline: none;
+            }
+
+            select {
+                appearance: none;
+                cursor: pointer;
+            }
+        }
+
+        .rasm {
+            label {
+                width: 100%;
+                background: #ffffff;
+                border: 1px solid #01265F;
+                border-radius: 8px;
+                font-family: Inter;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 22px;
+                letter-spacing: 0em;
+                text-align: left;
+                height: 48px;
+                padding: 13px;
+                outline: none;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+            }
+        }
+    }
+
+    button {
+        width: 320px;
+        height: 48px;
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 22px;
+        letter-spacing: 0.02em;
+        text-align: left;
+        background: #01265F;
+        border-radius: 8px;
+        color: #ffffff;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: 80px;
+        margin-top: 40px;
+        cursor: pointer;
+    }
+}
+
+.video_tag {
+    position: absolute;
+    border: 1px solid ;
+    z-index: 100;
+    cursor: pointer;
+    width: 1100px;
+    top: 100px;
+
+}
+
+.video_fixed {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: block;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #000000bb;
+    z-index: 2;
+}

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
 export const State = createContext()
 export const host = 'https://api.neevoo.uz/v1'

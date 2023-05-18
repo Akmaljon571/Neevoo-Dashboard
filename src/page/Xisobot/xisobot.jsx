@@ -16,7 +16,7 @@ function Xisobot() {
     return (  
         <div className='xisobot'>
             <ul>
-                <li style={{marginRight: '80px'}}>
+                <li>
                     <span>Jami O'quvchilar:</span>
                     <p>{count?.user} ta</p>
                     <img src={xisobotIcon} alt="" />
@@ -26,7 +26,7 @@ function Xisobot() {
                     <p>{count?.video} ta</p>
                     <img src={xisobotIcon} alt="" />
                 </li>
-                <li style={{marginRight: '80px'}} >
+                <li>
                     <span>Jami Yo'nalishlar:</span>
                     <p>{count?.yonalish} ta</p>
                     <img src={xisobotIcon} alt="" />

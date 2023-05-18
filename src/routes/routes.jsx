@@ -1,14 +1,13 @@
 import { Route, Routes } from "react-router-dom";
-import { Xisobot } from "../page";
-import Course from "../page/Course/course";
+import { Xisobot, Course, Videos } from "../page";
 
 function Routers() {
   return (
     <Routes>
       <Route path="/" element={<Xisobot />} />
       <Route path="/course" element={<Course />} />
+      <Route path="/video" element={<Videos />} />
     </Routes>
   );
 }
-
 export default Routers;
