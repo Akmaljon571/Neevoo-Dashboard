@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { host } from "../../content/start";
+import { useRef, useState } from "react";
 import "./category.scss";
 import { ImageIcon } from "../../assets/icons";
-import axios from "../../utils/axios"
+import axios from "../../utils/axios";
 import CategoryList from "./category_list";
 
 function Category() {
@@ -10,7 +9,7 @@ function Category() {
   const shef = useRef();
   const titleRef = useRef();
   const descriptionRef = useRef();
-  const token = localStorage.getItem("adminToken")
+  const token = localStorage.getItem("adminToken");
 
   const submit = async (e) => {
     e.preventDefault();
@@ -21,20 +20,8 @@ function Category() {
     formData.append("description", descriptionRef.current.value);
     formData.append("file", file);
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-        autharization: token,
-      },
-      body: formData
-    };
-
-   let response = await axios.post("/categories/create",formData)
-console.log(response)
-    // fetch(host + "/categories/create", requestOptions)
-    //   .then((re) => re.ok && re.json())
-    //   .then((data) => console.log(data));
+    let response = await axios.post("/categories/create", formData);
+    console.log(response);
   };
 
   const handleFileChange = (e) => {
@@ -72,7 +59,7 @@ console.log(response)
               <span className="placeholder_title">
                 <ImageIcon />
               </span>
-              <span className="file_name"> {file?.name}</span>
+              <i className="file_name"> {file?.name ? file.name : "Yuklash"}</i>
             </p>
             <input
               className="title_input"
