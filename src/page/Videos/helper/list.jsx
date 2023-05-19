@@ -9,15 +9,15 @@ function ListVideo({ children }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [active, setActive] = useState(false);
   const [value, setValue] = useState({});
-  const [count, setCount] = useState(0);
-  const [video, setVideo] = useState([]);
-  const [course, setCourse] = useState([]);
-  const shef = useRef();
-  const updateTitle = useRef();
-  const updateDaqiqa = useRef();
-  const updateKetmaKet = useRef();
-  const token = JSON.parse(localStorage.getItem("adminToken"));
-  const key = "updatable";
+  const [count, setCount] = useState(0)
+  const [video, setVideo] = useState([])
+  const key = 'updatable'
+  const token = JSON.parse(localStorage.getItem('adminToken'))
+  const [course, setCourse] = useState([])
+  const shef = useRef()
+  const updateTitle = useRef()
+  const updateDaqiqa = useRef()
+  const updateKetmaKet = useRef()
 
   useEffect(() => {
     fetch(host + "/courses")
