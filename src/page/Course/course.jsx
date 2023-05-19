@@ -12,6 +12,7 @@ function Course() {
   const [course, setCourse] = useState([]);
   const [count, setCount] = useState(0);
   const [one, setOne] = useState({});
+  const [update, setUpdate] = useState(true);
   const [inputFile, setFile] = useState();
   const [messageApi, contextHolder] = message.useMessage();
   const titleRef = useRef();
@@ -79,6 +80,7 @@ function Course() {
     const lang = langRef.current.value;
     const description = descriptionRef.current.value;
     const filePhoto = file.current.files[0];
+    console.log(filePhoto);
 
     if (title && category && lang && description && filePhoto) {
       let formData = new FormData();
@@ -128,6 +130,14 @@ function Course() {
     }
   };
 
+  const handleChangeUpdate = () => {
+    if (update == true) {
+      setUpdate(false);
+    } else {
+      setUpdate(true);
+    }
+  };
+
   const cancel = (e) => {
     message.error("Click on No");
   };
@@ -168,10 +178,9 @@ function Course() {
           <label style={{ marginTop: "20px" }}>
             <p>Course yuklash</p>
             <p className="file">
-              Yuklash
+              {inputFile?.name ? inputFile?.name : "Yuklash"}
               <img src={download} alt="" />
             </p>
-            <p>{inputFile?.title}</p>
             <input
               ref={file}
               onChange={handleFileChange}
@@ -229,31 +238,107 @@ function Course() {
                   className={i % 2 !== 0 ? "list_item2" : `list_item`}
                   key={e.id}
                 >
-                  <p>{++i}</p>
-                  <p>{e.title}</p>
-                  <p>{e.lang}</p>
-                  <p>{e.description}</p>
-                  <Popover
-                    content={
-                      <div>
-                        <div>
-                          <button className="upd">Update</button>
-                        </div>
-                        <Popconfirm
-                          title="O'chirmoqchimisz?"
-                          onConfirm={() => deleteCourse(e.id)}
-                          onCancel={cancel}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <button className="dlt">Delete</button>
-                        </Popconfirm>
-                      </div>
-                    }
-                    trigger="click"
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "18px",
+                    }}
                   >
-                    <img src={dot} alt="" width={20} height={20} />
-                  </Popover>
+                    {++i}{" "}
+                    {update == true ? (
+                      ""
+                    ) : (
+                      <label className="file_img" style={{ marginTop: "20px" }}>
+                        <p className="filee">
+                          <img
+                            style={{ margin: "0px" }}
+                            src={download}
+                            alt=""
+                          />
+                          {inputFile?.name ? inputFile?.name : "Rasm"}
+                        </p>
+                        <input
+                          ref={file}
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                          type="file"
+                          placeholder="Yuklash"
+                        />
+                      </label>
+                    )}
+                  </p>
+
+                  {update == true ? (
+                    <p> {e.title}</p>
+                  ) : (
+                    <input className="update_inp" defaultValue={e.title} />
+                  )}
+                  {update == true ? (
+                    <p>{e.lang}</p>
+                  ) : (
+                    <select
+                      style={{ marginLeft: "28px" }}
+                      className="update_inp"
+                    >
+                      <option value="uz">Uz</option>
+                      <option value="en">En</option>
+                      <option value="ru">Ru</option>
+                    </select>
+                  )}
+                  {update == true ? (
+                    <p>{e.description}</p>
+                  ) : (
+                    <input
+                      style={{ marginLeft: "28px" }}
+                      className="update_inp"
+                      defaultValue={e.description}
+                    />
+                  )}
+                  {update == true ? (
+                    <Popover
+                      content={
+                        <div>
+                          <div>
+                            <button
+                              className="upd"
+                              onClick={handleChangeUpdate}
+                            >
+                              Update
+                            </button>
+                          </div>
+                          <Popconfirm
+                            title="O'chirmoqchimisz?"
+                            onConfirm={() => deleteCourse(e.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <button className="dlt">Delete</button>
+                          </Popconfirm>
+                        </div>
+                      }
+                      trigger="click"
+                    >
+                      <img src={dot} alt="" width={20} height={20} />
+                    </Popover>
+                  ) : (
+                    <div className="flex">
+                      <button
+                        className="btn_update"
+                        style={{ background: "#d21111" }}
+                        onClick={handleChangeUpdate}
+                      >
+                        cancel
+                      </button>{" "}
+                      <button
+                        className="btn_update"
+                        style={{ background: "11d255" }}
+                      >
+                        send
+                      </button>
+                    </div>
+                  )}
                 </li>
               );
             })}
