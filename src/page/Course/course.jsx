@@ -1,16 +1,28 @@
 import { useEffect, useRef, useState } from "react";
 import { host } from "../../content/start";
-import search from "../../img/search.svg";
+import search2 from "../../img/search.svg";
 import dot from "../../img/more.png";
 import download from "../../img/bx_download.svg";
 import "./course.scss";
-import { Popover } from "antd";
+import { Popconfirm, Popover, message } from "antd";
+import axios from "../../utils/axios";
 
 function Course() {
   const [category, setCategory] = useState([]);
   const [course, setCourse] = useState([]);
   const [count, setCount] = useState(0);
   const [one, setOne] = useState({});
+  const [inputFile, setFile] = useState();
+  const [messageApi, contextHolder] = message.useMessage();
+  const titleRef = useRef();
+  const descriptionRef = useRef();
+  const langRef = useRef();
+  // const shef = useRef();
+  const key = "dsfsds";
+  const categoryRef = useRef();
+  const file = useRef();
+  const input = useRef();
+  const token = JSON.parse(localStorage.getItem("adminToken"));
 
   useEffect(() => {
     fetch(host + "/categories/list")
@@ -27,7 +39,6 @@ function Course() {
         .then((re) => re.json())
         .then((data) => {
           setCourse(data);
-          console.log(data);
         });
     }
   }, [one]);
@@ -39,31 +50,101 @@ function Course() {
   };
 
   const deleteCourse = (id) => {
-    const token = JSON.parse(localStorage.getItem("adminToken"));
     fetch(host + `/courses/delete/${id}`, {
       method: "DELETE",
       headers: {
         autharization: token,
+        "Content-Type": "application/json",
       },
-    })
-      .then((data) => setCount(count + 1));
+    }).then(() => setCount(count - 1));
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
 
+  const send = (e) => {
+    e.preventDefault();
+
+    messageApi.open({
+      key,
+      type: "loading",
+      content: "Loading...",
+    });
+
+    const title = titleRef.current.value;
+    const category = categoryRef.current.value;
+    const lang = langRef.current.value;
+    const description = descriptionRef.current.value;
+    const filePhoto = file.current.files[0];
+
+    if (title && category && lang && description && filePhoto) {
+      let formData = new FormData();
+      formData.append("file", filePhoto);
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("lang", lang);
+      formData.append("description", description);
+
+      fetch(host + "/courses/create", {
+        method: "POST",
+        headers: {
+          autharization: token,
+        },
+        body: formData,
+      }).then((data) => {
+        if (data.ok) {
+          setCount(count + 1);
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "success",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "error",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        }
+      });
+    } else {
+      setTimeout(() => {
+        messageApi.open({
+          key,
+          type: "error",
+          content: "Loaded!",
+          duration: 2,
+        });
+      }, 1000);
+    }
+  };
+
+  const cancel = (e) => {
+    message.error("Click on No");
+  };
   return (
     <>
       <div className="course">
         <h2>Yangi o’quvchi qo’shish</h2>
-
+        {contextHolder}
         <form>
           <div>
             <p>Course nomi</p>
-            <input type="text" name="" placeholder="Nomi" />
+            <input ref={titleRef} type="text" placeholder="Nomi" />
           </div>
 
           <div>
             <p>Course tili</p>
-            <select name="">
+            <select ref={langRef} name="">
               <option value="uz">Uz</option>
               <option value="en">Ru</option>
               <option value="ru">En</option>
@@ -72,7 +153,16 @@ function Course() {
 
           <div>
             <p>Course category</p>
-            <input type="text" name="" placeholder="Category" />
+            <select ref={categoryRef}>
+              {category &&
+                category.map((e) => {
+                  return (
+                    <option key={e.id} value={e.id}>
+                      {e.title}
+                    </option>
+                  );
+                })}
+            </select>
           </div>
 
           <label style={{ marginTop: "20px" }}>
@@ -81,20 +171,23 @@ function Course() {
               Yuklash
               <img src={download} alt="" />
             </p>
+            <p>{inputFile?.title}</p>
             <input
+              ref={file}
+              onChange={handleFileChange}
               style={{ display: "none" }}
               type="file"
-              name=""
+              placeholder="Yuklash"
             />
           </label>
 
           <div className="box">
             <p>Course description </p>
-            <textarea name="" placeholder="Description"></textarea>
+            <textarea ref={descriptionRef} placeholder="Description"></textarea>
           </div>
 
           <div>
-            <button>Qo’shish</button>
+            <button onClick={send}>Qo’shish</button>
           </div>
         </form>
 
@@ -116,8 +209,8 @@ function Course() {
             </select>
           </div>
           <div className="absulute">
-            <img src={search} alt="search img" />
-            <input type="search" name="" placeholder="Search" />
+            <img src={search2} alt="search img" />
+            <input type="search" ref={input} placeholder="Search" />
           </div>
         </div>
 
@@ -146,12 +239,15 @@ function Course() {
                         <div>
                           <button className="upd">Update</button>
                         </div>
-                        <button
-                          onClick={() => deleteCourse(e?.id)}
-                          className="dlt"
+                        <Popconfirm
+                          title="O'chirmoqchimisz?"
+                          onConfirm={() => deleteCourse(e.id)}
+                          onCancel={cancel}
+                          okText="Yes"
+                          cancelText="No"
                         >
-                          Delete
-                        </button>
+                          <button className="dlt">Delete</button>
+                        </Popconfirm>
                       </div>
                     }
                     trigger="click"
