@@ -1,28 +1,28 @@
+import "./course.scss";
 import { useEffect, useRef, useState } from "react";
 import { host } from "../../content/start";
 import search2 from "../../img/search.svg";
 import dot from "../../img/more.png";
 import download from "../../img/bx_download.svg";
-import "./course.scss";
 import { Popconfirm, Popover, message } from "antd";
-import axios from "../../utils/axios";
 
 function Course() {
+  const [messageApi, contextHolder] = message.useMessage();
   const [category, setCategory] = useState([]);
   const [course, setCourse] = useState([]);
-  const [search, setSearch] = useState([]);
   const [count, setCount] = useState(0);
   const [one, setOne] = useState({});
-  const [file, setFile] = useState();
-  const [messageApi, contextHolder] = message.useMessage();
+  const [update, setUpdate] = useState("");
+  const [inputFile, setFile] = useState();
   const titleRef = useRef();
   const descriptionRef = useRef();
   const langRef = useRef();
-  const shef = useRef();
-  const rasmi = useRef();
   const categoryRef = useRef();
+  const file = useRef();
   const input = useRef();
   const token = JSON.parse(localStorage.getItem("adminToken"));
+  const img_url = "https://storage.googleapis.com/course_hunter/";
+  const key = "dsfsds";
 
   useEffect(() => {
     fetch(host + "/categories/list")
@@ -39,7 +39,6 @@ function Course() {
         .then((re) => re.json())
         .then((data) => {
           setCourse(data);
-          console.log(data);
         });
     }
   }, [one]);
@@ -51,14 +50,41 @@ function Course() {
   };
 
   const deleteCourse = (id) => {
+    messageApi.open({
+      key,
+      type: "loading",
+      content: "Loading...",
+    });
     fetch(host + `/courses/delete/${id}`, {
       method: "DELETE",
       headers: {
         autharization: token,
         "Content-Type": "application/json",
       },
-    }).then(() => setCount(count - 1));
+    }).then((data) => {
+      if (data.ok) {
+        setCount(count + 1);
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: "success",
+            content: "Loaded!",
+            duration: 2,
+          });
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: "error",
+            content: "Loaded!",
+            duration: 2,
+          });
+        }, 1000);
+      }
+    });
   };
+
   const handleFileChange = (e) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
@@ -68,20 +94,25 @@ function Course() {
   const send = (e) => {
     e.preventDefault();
 
-    const key = 'sdfghjk'
-    const title = titleRef.current.value;
-    const categoryRef = titleRef.current.value;
-    const langRef = titleRef.current.value;
-    const descriptionRef = titleRef.current.value;
-    const file = rasmi.current?.files[0];
+    messageApi.open({
+      key,
+      type: "loading",
+      content: "Loading...",
+    });
 
-    if (titleRef && categoryRef && langRef && descriptionRef && file) {
+    const title = titleRef.current.value;
+    const category = categoryRef.current.value;
+    const lang = langRef.current.value;
+    const description = descriptionRef.current.value;
+    const filePhoto = file.current.files[0];
+
+    if (title && category && lang && description && filePhoto) {
       let formData = new FormData();
+      formData.append("file", filePhoto);
       formData.append("title", title);
-      formData.append("category ", category);
-      formData.append("lang", langRef);
-      formData.append("description", descriptionRef);
-      formData.append("file", file);
+      formData.append("category", category);
+      formData.append("lang", lang);
+      formData.append("description", description);
 
       fetch(host + "/courses/create", {
         method: "POST",
@@ -116,23 +147,192 @@ function Course() {
         messageApi.open({
           key,
           type: "error",
-          content: "Loaded!",
+          content: "Malumot kiriting!",
           duration: 2,
         });
       }, 1000);
     }
   };
 
+  const updateCourse = async (id) => {
+    const course_title = titleRef.current.value;
+    const course_lang = langRef.current.value;
+    const course_description = descriptionRef.current.value;
+    const newFile = file.current.value;
+    if (newFile === "") {
+      fetch(host + "/courses/update/" + id, {
+        method: "PATCH",
+        headers: {
+          autharization: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: course_title,
+          lang: course_lang,
+          description: course_description,
+        }),
+      }).then((re) => {
+        if (re.ok) {
+          setUpdate("");
+          setCount(count + 1);
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "success",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "error",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        }
+      });
+    } else {
+      const formData = new FormData();
+      formData.append("title", course_title);
+      formData.append("lang", course_lang);
+      formData.append("description", course_description);
+      formData.append("file", file);
 
+      fetch(host + "/courses/update/" + id, {
+        method: "PATCH",
+        headers: {
+          autharization: token,
+        },
+        body: formData,
+      }).then((re) => {
+        if (re.ok) {
+          setUpdate("");
+          setCount(count + 1);
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "success",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: "error",
+              content: "Loaded!",
+              duration: 2,
+            });
+          }, 1000);
+        }
+      });
+    }
+  };
+
+  const handleKeyUp = (e, id) => {
+    if (e.keyCode === 13) {
+      const course_title = titleRef.current.value;
+      const course_lang = langRef.current.value;
+      const course_description = descriptionRef.current.value;
+      const newFile = file.current.value;
+      messageApi.open({
+        key,
+        type: "loading",
+        content: "Loading...",
+      });
+
+      if (newFile === "") {
+        fetch(host + "/courses/update/" + id, {
+          method: "PATCH",
+          headers: {
+            autharization: token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: course_title,
+            lang: course_lang,
+            description: course_description,
+          }),
+        }).then((re) => {
+          if (re.ok) {
+            setUpdate("");
+            setCount(count + 1);
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: "success",
+                content: "Loaded!",
+                duration: 2,
+              });
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: "error",
+                content: "Loaded!",
+                duration: 2,
+              });
+            }, 1000);
+          }
+        });
+      } else {
+        const formData = new FormData();
+        formData.append("title", course_title);
+        formData.append("lang", course_lang);
+        formData.append("description", course_description);
+        formData.append("file", file);
+
+        fetch(host + "/courses/update/" + id, {
+          method: "PATCH",
+          headers: {
+            autharization: token,
+          },
+          body: formData,
+        }).then((re) => {
+          if (re.ok) {
+            setCount(count + 1);
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: "success",
+                content: "Loaded!",
+                duration: 2,
+              });
+            }, 1000);
+            setUpdate("");
+          } else {
+            setTimeout(() => {
+              messageApi.open({
+                key,
+                type: "error",
+                content: "Loaded!",
+                duration: 2,
+              });
+            }, 1000);
+          }
+        });
+      }
+    }
+  };
+
+  const handleChangeUpdate = (id) => {
+    setUpdate(id);
+  };
 
   const cancel = (e) => {
     message.error("Click on No");
   };
+
   return (
     <>
       <div className="course">
         <h2>Yangi o’quvchi qo’shish</h2>
-
+        {contextHolder}
         <form>
           <div>
             <p>Course nomi</p>
@@ -150,18 +350,26 @@ function Course() {
 
           <div>
             <p>Course category</p>
-            <input ref={categoryRef} type="text" placeholder="Category" />
+            <select ref={categoryRef}>
+              {category &&
+                category.map((e) => {
+                  return (
+                    <option key={e.id} value={e.id}>
+                      {e.title}
+                    </option>
+                  );
+                })}
+            </select>
           </div>
 
           <label style={{ marginTop: "20px" }}>
             <p>Course yuklash</p>
             <p className="file">
-              Yuklash
+              {inputFile?.name ? inputFile?.name : "Yuklash"}
               <img src={download} alt="" />
             </p>
-            <p>{file?.name ? file?.name : "Yuklash"}</p>
             <input
-              ref={shef}
+              ref={file}
               onChange={handleFileChange}
               style={{ display: "none" }}
               type="file"
@@ -204,7 +412,10 @@ function Course() {
 
         <ul>
           <li>
-            <p>№</p>
+            <p style={{ display: "flex", gap: "70px", alignItems: "center" }}>
+              № <p style={{ margin: 0 }}>Image</p>
+            </p>
+
             <p>Title</p>
             <p>Language</p>
             <p>Description</p>
@@ -217,36 +428,143 @@ function Course() {
                   className={i % 2 !== 0 ? "list_item2" : `list_item`}
                   key={e.id}
                 >
-                  <p>{++i}</p>
-                  <p>{e.title}</p>
-                  <p>{e.lang}</p>
-                  <p>{e.description}</p>
-                  <Popover
-                    content={
-                      <div>
-                        <div>
-                          <button className="upd">Update</button>
-                        </div>
-                        <Popconfirm
-                          title="O'chirmoqchimisz?"
-                          onConfirm={() => deleteCourse(e.id)}
-                          onCancel={cancel}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <button className="dlt">Delete</button>
-                        </Popconfirm>
-                      </div>
-                    }
-                    trigger="click"
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "18px",
+                    }}
                   >
-                    <img src={dot} alt="" width={20} height={20} />
-                  </Popover>
+                    {++i}{" "}
+                    {update !== e.id ? (
+                      <img
+                        style={{
+                          borderRadius: "5px",
+                          marginRight: "90px",
+                          marginTop: "10px",
+                        }}
+                        src={img_url + e.image}
+                        alt=""
+                        width={50}
+                        height={50}
+                      />
+                    ) : (
+                      <label className="file_img" style={{ marginTop: "20px" }}>
+                        <p className="filee">
+                          <img
+                            style={{ margin: "0px" }}
+                            src={download}
+                            alt=""
+                          />
+                          {inputFile?.name ? inputFile?.name : "Rasm"}
+                        </p>
+                        <input
+                          ref={file}
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                          type="file"
+                          placeholder="Yuklash"
+                        />
+                      </label>
+                    )}
+                  </p>
+
+                  {update !== e.id ? (
+                    <p> {e.title}</p>
+                  ) : (
+                    <input
+                      className="update_inp"
+                      ref={titleRef}
+                      defaultValue={e.title}
+                      onKeyUp={(evt) => handleKeyUp(evt, e.id)}
+                    />
+                  )}
+                  {update !== e.id ? (
+                    <p>{e.lang}</p>
+                  ) : (
+                    <select
+                      ref={langRef}
+                      style={{ marginLeft: "28px" }}
+                      className="update_inp"
+                    >
+                      <option value="uz">Uz</option>
+                      <option value="en">En</option>
+                      <option value="ru">Ru</option>
+                    </select>
+                  )}
+                  {update !== e.id ? (
+                    <p
+                      style={{
+                        height: "40px",
+                        overflow: "auto",
+                        marginTop: "7px",
+                      }}
+                    >
+                      {e.description}
+                    </p>
+                  ) : (
+                    <input
+                      ref={descriptionRef}
+                      onKeyUp={(evt) => handleKeyUp(evt, e.id)}
+                      style={{ marginLeft: "28px" }}
+                      className="update_inp"
+                      defaultValue={e.description}
+                    />
+                  )}
+                  {update !== e.id ? (
+                    <Popover
+                      content={
+                        <div>
+                          <div>
+                            <button
+                              className="upd"
+                              onClick={() => handleChangeUpdate(e.id)}
+                            >
+                              Update
+                            </button>
+                          </div>
+                          <Popconfirm
+                            title="O'chirmoqchimisz?"
+                            onConfirm={() => deleteCourse(e.id)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <button className="dlt">Delete</button>
+                          </Popconfirm>
+                        </div>
+                      }
+                      trigger="click"
+                    >
+                      <img src={dot} alt="" width={20} height={20} />
+                    </Popover>
+                  ) : (
+                    <div className="flex">
+                      <button
+                        className="btn_update"
+                        style={{ background: "#d21111" }}
+                        onClick={handleChangeUpdate}
+                      >
+                        cancel
+                      </button>{" "}
+                      <button
+                        onClick={() => updateCourse(e.id)}
+                        className="btn_update"
+                        style={{ background: "11d255" }}
+                      >
+                        send
+                      </button>
+                    </div>
+                  )}
                 </li>
               );
             })}
         </ul>
       </div>
+      {/* {active ? (
+        <>
+        </>
+      ) : null} */}
     </>
   );
 }
