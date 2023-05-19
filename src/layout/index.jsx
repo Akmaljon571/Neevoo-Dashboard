@@ -34,7 +34,7 @@ const LayOut = () => {
             case '/video':
                 setLocation('Videos')
                 break;
-            case '/user':
+            case '/users':
                 setLocation('Users')
                 break;
             default:
@@ -62,7 +62,7 @@ const LayOut = () => {
                 navigate('/video')
                 break;
             case 'Users':
-                navigate('/user')
+                navigate('/users')
                 break;
             default:
                 navigate('/')
