@@ -11,13 +11,13 @@ function ListVideo({children}) {
   const [value, setValue] = useState({});
   const [count, setCount] = useState(0)
   const [video, setVideo] = useState([])
+  const key = 'updatable'
+  const token = JSON.parse(localStorage.getItem('adminToken'))
   const [course, setCourse] = useState([])
   const shef = useRef()
   const updateTitle = useRef()
   const updateDaqiqa = useRef()
   const updateKetmaKet = useRef()
-  const token = JSON.parse(localStorage.getItem('adminToken'))
-  const key = 'updatable'
 
   useEffect(() => {
     fetch(host + '/courses')
