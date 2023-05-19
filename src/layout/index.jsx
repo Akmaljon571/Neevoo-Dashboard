@@ -83,7 +83,7 @@ const LayOut = () => {
                     theme="dark"
                     mode="inline"
                     onClick={handleNavigate}
-                    defaultSelectedKeys={[defaultLocation === '/' ? 'Xisobot' : defaultLocation === '/category' ? 'Category' : defaultLocation === '/course' ? 'Course' : defaultLocation === '/course' ? "Course" : defaultLocation === '/video' ? 'Videos' : defaultLocation === '/user' ? 'Users' : 'Xisobot']}
+                    defaultSelectedKeys={[defaultLocation === '/' ? 'Xisobot' : defaultLocation === '/category' ? 'Category' : defaultLocation === '/course' ? 'Course' : defaultLocation === '/course' ? "Course" : defaultLocation === '/video' ? 'Videos' : defaultLocation === '/users' ? 'Users' : 'Xisobot']}
                     items={[
                         {
                             key: 'Xisobot',
