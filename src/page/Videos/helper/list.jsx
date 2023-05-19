@@ -8,11 +8,11 @@ function ListVideo() {
   const [coursId, setCourseId] = useState(0);
   const img_url = 'https://storage.googleapis.com/course_hunter/'
   const [messageApi, contextHolder] = message.useMessage()
+  const key = 'updatable'
   const [active, setActive] = useState(false)
   const [count, setCount] = useState(0)
   const [video, setVideo] = useState([])
   const token = JSON.parse(localStorage.getItem('adminToken'))
-  const key = 'updatable'
   const [course, setCourse] = useState([])
   const shef = useRef()
 

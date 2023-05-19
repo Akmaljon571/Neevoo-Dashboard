@@ -1,81 +1,261 @@
-import { useEffect, useState } from "react"
-import { host } from "../../../content/start"
-import {Popover} from 'antd'
-import dot from '../../../img/more.png'
-import './list.scss'
-import axios from "axios"
-
+import { useEffect, useRef, useState } from "react";
+import { host } from "../../../content/start";
+import { Popover, Popconfirm, Result, message } from "antd";
+import dot from "../../../img/more.png";
+import search from "../../../img/search.svg";
+import "./list.scss";
+import axios from "axios";
 
 function CategoryList() {
-    const [categories, setCategories] = useState([])
-    const [state, setState] = useState(0)
-    const token = localStorage.getItem('adminToken')
-      useEffect(() => {
-      fetch(host +  '/categories/list')
-      .then(re => re.json())
-      .then(data => {
-        data.length ? setCategories(data) : setCategories([])
-        setState(state + 1)
-      })
-  }, [state])
+  const [categories, setCategories] = useState([]);
+  const [state, setState] = useState(0);
+  const [beforeValue, setBeforeValue] = useState(categories)
+  const [changeTag, setChangeTag] = useState("");
+  const [file, setFile] = useState();
+  const [messageApi, contextHolder] = message.useMessage()
+  const key = 'updatable'
 
-  const deleteCategory = async(id) => {
-    console.log(token);
-    fetch(host + `/categories/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-            autharization: JSON.parse(token)
+  const token = localStorage.getItem("adminToken");
+  const img_url = "https://storage.googleapis.com/course_hunter/";
+
+  const updateTitleRef = useRef();
+  const updateDescRef = useRef();
+
+  const handleSearch = async (e) => {
+    await fetch(host + `/categories/${e.target.value}`, {
+      method: "GET",
+      headers: {
+        autharization: JSON.parse(token),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (e.target.value !== '') {
+          setCategories(data)
+        } else {
+          setCategories(beforeValue)
         }
       })
-        .then((res) => res.json())
-        .then((data) => setState(state + 1))
-        .catch((err) => console.log(err));
-    console.log(id);
-  }
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    fetch(host + "/categories/list")
+      .then((re) => re.json())
+      .then((data) => {
+        setBeforeValue(data)
+        setCategories(data)
+      });
+  }, [state]);
+
+  const deleteCategory = async (id) => {
+    messageApi.open({
+      key,
+      type: 'loading',
+      content: 'Loading...'
+    })
+
+    fetch(host + `/categories/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        autharization: JSON.parse(token),
+      },
+    })
+      .then((re) => {
+        if (re.ok) {
+          setState(state + 1)
+          setTimeout(() => {
+            messageApi.open({
+              key,
+              type: 'success',
+              content: 'Loaded!',
+              duration: 2
+            })
+          }, 1000)
+        } else {
+          messageApi.open({
+            key,
+            type: 'error',
+            content: 'Loaded!',
+            duration: 2
+          })
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleEdit = (id) => {
+    setChangeTag(id);
+  };
+
+  const cancelUpdate = () => {
+    setChangeTag(!changeTag);
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpdateCategory = async (id) => {
+    const title = updateTitleRef.current.value;
+    const description = updateDescRef.current.value;
+
+    if (!file) {
+      const updateData = {
+        title,
+        description,
+        image: file,
+      };
+
+      await axios.patch(host + `/categories/update/${id}`, updateData);
+      setChangeTag(!changeTag);
+      setState(state + 1)
+    } else {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("file", file);
+
+      await axios.patch(host + `/categories/update/${id}`, formData);
+      setChangeTag(!changeTag);
+      setState(state + 1)
+    }
+  };
 
   return (
     <div className="list__wrapper">
-        <h2>Mavjud Kategoriyalar</h2>
-        <ul>
-          <li>
-            <p>№</p>
-            <p>Title</p>
-            <p>Language</p>
-            <p>Description</p>
-          </li>
-          {categories.length &&
-            categories.map((e, i) => {
-              return (
-                <li
-                  className={i % 2 !== 0 ? "list_item2" : `list_item`}
-                  key={e.id}
-                >
-                  <p>{++i}</p>
+      {contextHolder}
+      <div className="list__header">
+        <h2 className="list__title">Mavjud Kategoriyalar</h2>
+        <div className="absulute">
+          <img src={search} alt="search img" />
+          <input
+            type="search"
+            onChange={handleSearch}
+            name=""
+            placeholder="Search"
+          />
+        </div>
+      </div>
+      <ul>
+        <li>
+          <p style={{ width: "50px" }}>№</p>
+          <p>Title</p>
+          <p>Description</p>
+          <p style={{ marginLeft: "220px", marginRight: "60px" }}>Image</p>
+          <p style={{ marginRight: "-700px" }}>More</p>
+        </li>
+        {categories.length ? (
+          categories.map((e, i) => {
+            return (
+              <li
+                className={i % 2 !== 0 ? "list_item2" : `list_item`}
+                key={e.id}
+              >
+                <p style={{ width: "50px", textAlign: "start" }}>{++i}</p>
+                {changeTag !== e.id ? (
                   <p>{e?.title}</p>
+                ) : (
+                  <input
+                    style={{ marginLeft: "-2px" }}
+                    defaultValue={e.title}
+                    ref={updateTitleRef}
+                    className="edit_input"
+                  />
+                )}
+                {changeTag !== e.id ? (
                   <p>{e?.description}</p>
+                ) : (
+                  <input
+                    defaultValue={e.description}
+                    ref={updateDescRef}
+                    className="edit_input"
+                  />
+                )}
+                {changeTag !== e.id ? (
+                  <img
+                    width={50}
+                    height={50}
+                    src={img_url + e.image}
+                    alt="category_image"
+                  />
+                ) : (
+                  <label className="label_updateImg">
+                    <img
+                      width={30}
+                      height={30}
+                      style={{ marginLeft: "320px" }}
+                      src={img_url + e.image}
+                      alt=""
+                    />
+                    <i style={{display: 'block', marginLeft: "320px"}}>Update Image</i>
+                    <input
+                      style={{ marginLeft: "200px", display: "none" }}
+                      onChange={handleFileChange}
+                      type="file"
+                    />
+                  </label>
+                )}
+                {changeTag !== e.id ? (
                   <Popover
+                    trigger="click"
                     content={
                       <div>
                         <div>
-                          <button className="upd">Update</button>
+                          <button
+                            onClick={() => handleEdit(e.id)}
+                            className="upd"
+                          >
+                            Update
+                          </button>
                         </div>
-                        <button
-                          onClick={() => deleteCategory(e?.id)}
-                          className="dlt"
+
+                        <Popconfirm
+                          title="Kategorini o`chirmoqchimisiz"
+                          onConfirm={() => deleteCategory(e.id)}
+                          onCancel={() => {}}
+                          okText="Yes"
+                          cancelText="No"
                         >
-                          Delete
-                        </button>
+                          <button className="dlt">Delete</button>
+                        </Popconfirm>
                       </div>
                     }
-                    trigger="click"
                   >
                     <img src={dot} alt="" width={20} height={20} />
                   </Popover>
-                </li>
-              );
-            })}
-        </ul>
+                ) : (
+                  <div className="box_editButton">
+                    <button
+                      className="edit_button"
+                      style={{ backgroundColor: "red" }}
+                      onClick={cancelUpdate}
+                    >
+                      cancel
+                    </button>
+                    <button
+                      className="edit_button"
+                      style={{ backgroundColor: "blue" }}
+                      onClick={() => handleUpdateCategory(e.id)}
+                    >
+                      update
+                    </button>
+                  </div>
+                )}
+              </li>
+            );
+          })
+        ) : (
+          <Result
+            status="404"
+            title="404"
+            subTitle="Sorry, the page you visited does not exist."
+          />
+        )}
+      </ul>
     </div>
-  )
+  );
 }
-export default CategoryList
+export default CategoryList;
