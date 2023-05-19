@@ -1,20 +1,23 @@
-import { DeleteOutlined } from '@ant-design/icons'
 import { Popconfirm, message, Result, Popover } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { host } from '../../../content/start'
 import dot from "../../../img/more.png";
 
-function ListVideo() {
-  const [coursId, setCourseId] = useState(0);
+function ListVideo({children}) {
   const img_url = 'https://storage.googleapis.com/course_hunter/'
+  const [coursId, setCourseId] = useState(0);
   const [messageApi, contextHolder] = message.useMessage()
-  const key = 'updatable'
   const [active, setActive] = useState(false)
+  const [value, setValue] = useState({});
   const [count, setCount] = useState(0)
   const [video, setVideo] = useState([])
+  const key = 'updatable'
   const token = JSON.parse(localStorage.getItem('adminToken'))
   const [course, setCourse] = useState([])
   const shef = useRef()
+  const updateTitle = useRef()
+  const updateDaqiqa = useRef()
+  const updateKetmaKet = useRef()
 
   useEffect(() => {
     fetch(host + '/courses')
@@ -25,11 +28,11 @@ function ListVideo() {
           setCourseId(data[0].id)
         }
       })
-  }, [setCourse, token, count])
+  }, [setCourse, token, count, children])
 
   useEffect(() => {
     if (coursId) {
-      fetch(host + '/video/by_course/' + coursId, {
+      fetch(host + '/video/admin/' + coursId, {
         headers: {
           autharization: token,
           "Content-Type": "application/json",
@@ -78,13 +81,116 @@ function ListVideo() {
     message.error('Click on No')
   }
 
-  const handleOpenVideo = (link) => {
-    setActive(true)
-    setTimeout(() => {
-      shef.current.src = img_url + link
-      shef.current.load();
-      console.log(shef)
-    }, 10);
+  const handleOpenVideo = (link, id) => {
+    if (value?.id !== id) {
+      setActive(true)
+      setTimeout(() => {
+        shef.current.src = img_url + link
+        shef.current.load();
+      }, 10);
+    }
+  }
+
+  const handleUpdate = (text, id, daqiqa, ketma) => {
+    const obj = {
+      text,
+      daqiqa,
+      ketma,
+      id
+    }
+    setValue(obj)
+  }
+
+  const update = (id) => {
+    const video_text = updateTitle.current.value
+    const video_duration = updateDaqiqa.current.value
+    const sequence = Number(updateKetmaKet.current.value)
+    setValue({})
+    messageApi.open({
+      key,
+      type: 'loading',
+      content: 'Loading...'
+    })
+
+    fetch(host + '/video/update/' + id, {
+      method: 'PATCH',
+      headers: {
+        autharization: token,
+        "Content-Type": "application/json",
+      }, 
+      body: JSON.stringify({
+        video_text,
+        video_duration,
+        sequence
+      })
+    })
+    .then(data => {
+      if (data.ok) {
+        setCount(count + 1)
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: 'success',
+            content: 'Loaded!',
+            duration: 2
+          })
+        }, 1000)
+      } else {
+        messageApi.open({
+          key,
+          type: 'error',
+          content: 'Loaded!',
+          duration: 2
+        })
+      }
+    })
+  }
+
+  const handleKeyUp = (e, id) => {
+    if (e.keyCode === 13) {
+      const video_text = updateTitle.current.value
+    const video_duration = updateDaqiqa.current.value
+    const sequence = Number(updateKetmaKet.current.value)
+    setValue({})
+    messageApi.open({
+      key,
+      type: 'loading',
+      content: 'Loading...'
+    })
+
+    fetch(host + '/video/update/' + id, {
+      method: 'PATCH',
+      headers: {
+        autharization: token,
+        "Content-Type": "application/json",
+      }, 
+      body: JSON.stringify({
+        video_text,
+        video_duration,
+        sequence
+      })
+    })
+    .then(data => {
+      if (data.ok) {
+        setCount(count + 1)
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: 'success',
+            content: 'Loaded!',
+            duration: 2
+          })
+        }, 1000)
+      } else {
+        messageApi.open({
+          key,
+          type: 'error',
+          content: 'Loaded!',
+          duration: 2
+        })
+      }
+    })
+    }
   }
 
   return (
@@ -116,37 +222,42 @@ function ListVideo() {
           {video.length ? (
             video.map((e, i) => (
               <tr key={i}>
-                <td onClick={() => handleOpenVideo(e.link)}>{i + 1}</td>
-                <td onClick={() => handleOpenVideo(e.link)} style={{ fontWeight: 700 }}>{e.text}</td>
-                <td onClick={() => handleOpenVideo(e.link)}>{e.duration}</td>
-                <td onClick={() => handleOpenVideo(e.link)}>{e.sequence} chi</td>
+                <td onClick={() => handleOpenVideo(e.link, e.id)}>{i + 1}</td>
+                <td onClick={() => handleOpenVideo(e.link, e.id)} style={{ fontWeight: 700, maxWidth: '300px' }}>{value?.id !== e.id ? e.text : <input ref={updateTitle} onKeyUp={(evt) => handleKeyUp(evt, e.id)} className='updateInput' defaultValue={value?.text} type='text'/>}</td>
+                <td onClick={() => handleOpenVideo(e.link, e.id)}>{value?.id !== e.id ? e.duration : <input ref={updateDaqiqa} onKeyUp={(evt) => handleKeyUp(evt, e.id)} className='updateInput' defaultValue={value?.daqiqa} type='text'/>}</td>
+                <td onClick={() => handleOpenVideo(e.link, e.id)}>{value?.id !== e.id ? e.sequence : <input ref={updateKetmaKet} onKeyUp={(evt) => handleKeyUp(evt, e.id)} className='updateInput' defaultValue={value?.ketma} type='number'/>}chi</td>
                 <td>
-
-                  <Popover
-                    content={
-                      <div>
+                {value.id !== e.id ?
+                    <Popover
+                      content={
                         <div>
-                          <button className="upd">Update</button>
-                        </div>
-                        <Popconfirm
-                          title="O'chirmoqchimisz?"
-                          onConfirm={() => videoDelete(e.id)}
-                          onCancel={cancel}
-                          okText='Yes'
-                          cancelText='No'
-                        >
-                          <button
-                            className="dlt"
+                          <div>
+                            <button onClick={() => handleUpdate(e.text, e.id, e.duration, e.sequence)} className="upd">Update</button>
+                          </div>
+                          <Popconfirm
+                            title="O'chirmoqchimisz?"
+                            onConfirm={() => videoDelete(e.id)}
+                            onCancel={cancel}
+                            okText='Yes'
+                            cancelText='No'
                           >
-                            Delete
-                          </button>
-                        </Popconfirm>
-                      </div>
-                    }
-                    trigger="click"
-                  >
-                    <img src={dot} alt="" width={20} height={20} />
-                  </Popover>
+                            <button
+                              className="dlt"
+                            >
+                              Delete
+                            </button>
+                          </Popconfirm>
+                        </div>
+                      }
+                      trigger="click"
+                    >
+                      
+                      <img src={dot} alt="" width={20} height={20} />
+                    </Popover>
+                    : <>
+                      <button style={{borderRadius: '8px', marginRight: '10px'}} className="dlt" onClick={() => setValue({})}>Cancel</button>
+                      <button onClick={() => update(e.id)} style={{borderRadius: '8px'}} className='upd'>Send</button>
+                  </>}
                 </td>
               </tr>
             ))

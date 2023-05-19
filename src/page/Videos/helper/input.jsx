@@ -13,8 +13,8 @@ function InputVideo () {
   const seq = useRef()
   const token = JSON.parse(localStorage.getItem('adminToken'))
   const [messageApi, contextHolder] = message.useMessage()
-  const [courseId, setCourseId] = useState(0);
   const [course, setCourse] = useState([])
+  const [loader, setLoader] = useState(false);
   const [count, setCount] = useState();
   const [file, setFile] = useState();
 
@@ -23,9 +23,8 @@ function InputVideo () {
       .then(re => re.json())
       .then(data => {
         setCourse(data)
-        setCourseId(data[0].id)
       })
-  }, [setCourse, token,])
+  }, [setCourse, token])
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -52,14 +51,18 @@ function InputVideo () {
       formData.append('sequence', sequence)
       formData.append('video_duration', price)
       formData.append('video_course', bgcolor)
-
+      
+      setLoader(true)
       fetch(host + '/video/create', {
         method: 'POST',
         headers: {
           autharization: token
         },
         body: formData
-      }).then(data => {
+      })
+      .then(data => {
+        setLoader(false)
+        window.location.reload(true)
         if (data.ok) {
           setCount(count + 1)
           setTimeout(() => {
@@ -111,7 +114,7 @@ function InputVideo () {
             <select ref={bgc}>
               {course.length
                 ? course.map((e, i) => (
-                    <option key={i} value={e?.course_id}>
+                    <option key={i} value={e?.id}>
                       {e?.title}
                     </option>
                   ))
@@ -144,7 +147,10 @@ function InputVideo () {
         </ul>
         {contextHolder}
       </div>
-      <ListVideo>{courseId}</ListVideo>
+        {loader ? <div className='loader'>
+          <img width={300} height={300} src="https://usagif.com/wp-content/uploads/loading-71.gif" alt="loader" />
+        </div> : null}
+      <ListVideo>{count}</ListVideo>
     </>
   )
 }

@@ -91,7 +91,6 @@ function Category() {
             <p className="p span_category">Course description </p>
             <textarea
               className="textarea title_input"
-              name=""
               ref={descriptionRef}
               placeholder="Description"
             ></textarea>
