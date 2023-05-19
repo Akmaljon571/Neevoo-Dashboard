@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { host } from "../../content/start";
 import dot from "../../img/more.png";
 import download from "../../img/bx_download.svg";
-import { Popconfirm, Popover, message } from "antd";
+import { Popconfirm, Popover, Result, message } from "antd";
 
 function Course() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -415,7 +415,7 @@ function Course() {
             <p>Description</p>
             <p className="more">More</p>
           </li>
-          {course &&
+          {course.length ?
             course.map((e, i) => {
               return (
                 <li
@@ -552,7 +552,11 @@ function Course() {
                   )}
                 </li>
               );
-            })}
+            }) : <Result
+              status="404"
+              title="404"
+              subTitle="Sorry, the page you visited does not exist."
+            />}
         </ul>
       </div>
     </>
