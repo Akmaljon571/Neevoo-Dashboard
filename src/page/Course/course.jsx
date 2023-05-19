@@ -1,7 +1,6 @@
 import "./course.scss";
 import { useEffect, useRef, useState } from "react";
 import { host } from "../../content/start";
-import search2 from "../../img/search.svg";
 import dot from "../../img/more.png";
 import download from "../../img/bx_download.svg";
 import { Popconfirm, Popover, message } from "antd";
@@ -19,7 +18,6 @@ function Course() {
   const langRef = useRef();
   const categoryRef = useRef();
   const file = useRef();
-  const input = useRef();
   const token = JSON.parse(localStorage.getItem("adminToken"));
   const img_url = "https://storage.googleapis.com/course_hunter/";
   const key = "dsfsds";
@@ -362,7 +360,7 @@ function Course() {
             </select>
           </div>
 
-          <label style={{ marginTop: "20px" }}>
+          <label>
             <p>Course yuklash</p>
             <p className="file">
               {inputFile?.name ? inputFile?.name : "Yuklash"}
@@ -404,16 +402,12 @@ function Course() {
                 })}
             </select>
           </div>
-          <div className="absulute">
-            <img src={search2} alt="search img" />
-            <input type="search" ref={input} placeholder="Search" />
-          </div>
         </div>
 
         <ul>
           <li>
             <p style={{ display: "flex", gap: "70px", alignItems: "center" }}>
-              № <p style={{ margin: 0 }}>Image</p>
+              № <span style={{ margin: 0 }}>Image</span>
             </p>
 
             <p>Title</p>
@@ -561,10 +555,6 @@ function Course() {
             })}
         </ul>
       </div>
-      {/* {active ? (
-        <>
-        </>
-      ) : null} */}
     </>
   );
 }
