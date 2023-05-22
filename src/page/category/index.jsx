@@ -3,14 +3,14 @@ import "./category.scss";
 import { ImageIcon } from "../../assets/icons";
 import axios from "../../utils/axios";
 import CategoryList from "./category_list";
-import { Alert, Space, message } from "antd";
+import { message } from "antd";
 
 function Category() {
   const [file, setFile] = useState('');
-  const [alert, setAlert] = useState(false);
   const shef = useRef();
   const titleRef = useRef();
   const descriptionRef = useRef();
+  const [count, setCount] = useState(0);
 
   const [messageApi, contextHolder] = message.useMessage();
   const key = 'updatable';
@@ -25,7 +25,6 @@ function Category() {
       type: 'loading',
       content: 'Loading...',
     });
-    
     if (title !== "" && description !== "" &&  file !== '') {
       let formData = new FormData();
       formData.append("title", title);
@@ -33,6 +32,7 @@ function Category() {
       formData.append("file", file);
       let result = await axios.post("/categories/create", formData);
       if (result) {
+        setCount(count + 1)
         setTimeout(() => {
           messageApi.open({
             key,
@@ -74,7 +74,6 @@ function Category() {
   return (
     <div className="categories">
       {contextHolder}
-      {alert === true ? <Alert message="Error" type="error" showIcon style={{position: "absolute", top: "10px" ,width: "70%", display: "flex"}} /> : null}
       <h2 className="category_title">Yangi o’quvchi qo’shish</h2>
       <form action="" onSubmit={submit}>
         <div className="title_wrapper">
@@ -121,7 +120,7 @@ function Category() {
           </div>
         </div>
       </form>
-      <CategoryList />
+      <CategoryList>{count}</CategoryList>
     </div>
   );
 }

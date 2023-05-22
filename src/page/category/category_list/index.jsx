@@ -6,7 +6,7 @@ import search from "../../../img/search.svg";
 import "./list.scss";
 import axios from "axios";
 
-function CategoryList() {
+function CategoryList({ children }) {
   const [categories, setCategories] = useState([]);
   const [state, setState] = useState(0);
   const [beforeValue, setBeforeValue] = useState(categories)
@@ -46,7 +46,7 @@ function CategoryList() {
         setBeforeValue(data)
         setCategories(data)
       });
-  }, [state]);
+  }, [state, children]);
 
   const deleteCategory = async (id) => {
     messageApi.open({
@@ -139,122 +139,138 @@ function CategoryList() {
           />
         </div>
       </div>
-      <ul>
-        <li>
-          <p style={{ width: "50px" }}>№</p>
-          <p>Title</p>
-          <p>Description</p>
-          <p style={{ marginLeft: "220px", marginRight: "60px" }}>Image</p>
-          <p style={{ marginRight: "-700px" }}>More</p>
-        </li>
-        {categories.length ? (
-          categories.map((e, i) => {
-            return (
-              <li
-                className={i % 2 !== 0 ? "list_item2" : `list_item`}
-                key={e.id}
+      <table className="table">
+        <thead>
+          <tr>
+            <th style={{ width: "10px" }} className="th">№</th>
+            <th className="th">Title</th>
+            <th className="th">Description</th>
+            <th className="th" style={{ marginLeft: "220px", marginRight: "60px" }}>Image</th>
+            <th className="th" style={{ marginRight: "-700px" }}>More</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.length ? 
+            categories.map((e, i) => 
+              <tr 
+                  className={i % 2 !== 0 ? "list_item2" : `list_item`}
+                  key={e.id}
+                  style={{ width: "50px", textAlign: "start" }}
               >
-                <p style={{ width: "50px", textAlign: "start" }}>{++i}</p>
-                {changeTag !== e.id ? (
-                  <p>{e?.title}</p>
-                ) : (
-                  <input
-                    style={{ marginLeft: "-2px" }}
-                    defaultValue={e.title}
-                    ref={updateTitleRef}
-                    className="edit_input"
-                  />
-                )}
-                {changeTag !== e.id ? (
-                  <p>{e?.description}</p>
-                ) : (
-                  <input
-                    defaultValue={e.description}
-                    ref={updateDescRef}
-                    className="edit_input"
-                  />
-                )}
-                {changeTag !== e.id ? (
-                  <img
-                    width={50}
-                    height={50}
-                    src={img_url + e.image}
-                    alt="category_image"
-                  />
-                ) : (
-                  <label className="label_updateImg">
-                    <img
-                      width={30}
-                      height={30}
-                      style={{ marginLeft: "320px" }}
-                      src={img_url + e.image}
-                      alt=""
-                    />
-                    <i style={{display: 'block', marginLeft: "320px"}}>Update Image</i>
-                    <input
-                      style={{ marginLeft: "200px", display: "none" }}
-                      onChange={handleFileChange}
-                      type="file"
-                    />
-                  </label>
-                )}
-                {changeTag !== e.id ? (
-                  <Popover
-                    trigger="click"
-                    content={
-                      <div>
-                        <div>
-                          <button
-                            onClick={() => handleEdit(e.id)}
-                            className="upd"
-                          >
-                            Update
-                          </button>
-                        </div>
+                  <td>
+                    {++i}
+                  </td>
+                  <td>
+                    {changeTag !== e.id ? 
+                      <>
+                        {e?.title}
+                      </>
+                     : (
+                      <input
+                        style={{ marginLeft: "-2px" }}
+                        defaultValue={e.title}
+                        ref={updateTitleRef}
+                        className="edit_input"
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {changeTag !== e.id ? 
+                    <>
+                      {e?.description}
+                    </>
+                    : (
+                      <input
+                        defaultValue={e.description}
+                        ref={updateDescRef}
+                        className="edit_input"
+                      />
+                    )}
+                  </td>
+                  <td>
+                      {changeTag !== e.id ? (
+                        <img
+                          width={50}
+                          height={50}
+                          src={img_url + e.image}
+                          alt="category_image"
+                        />
+                      ) : (
+                        <label className="label_updateImg">
+                          <img
+                            width={30}
+                            height={30}
+                            style={{ marginLeft: "320px" }}
+                            src={img_url + e.image}
+                            alt=""
+                          />
+                          <i style={{display: 'block', marginLeft: "320px"}}>Update Image</i>
+                          <input
+                            style={{ marginLeft: "200px", display: "none" }}
+                            onChange={handleFileChange}
+                            type="file"
+                          />
+                        </label>
+                      )}
+                  </td>
+                  <td>
+                    {changeTag !== e.id ? (
+                      <Popover
+                        trigger="click"
+                        content={
+                          <div>
+                            <div>
+                              <button
+                                onClick={() => handleEdit(e.id)}
+                                className="upd"
+                              >
+                                Update
+                              </button>
+                            </div>
 
-                        <Popconfirm
-                          title="Kategorini o`chirmoqchimisiz"
-                          onConfirm={() => deleteCategory(e.id)}
-                          onCancel={() => {}}
-                          okText="Yes"
-                          cancelText="No"
+                            <Popconfirm
+                              title="Kategorini o`chirmoqchimisiz"
+                              onConfirm={() => deleteCategory(e.id)}
+                              onCancel={() => {}}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <button className="dlt">Delete</button>
+                            </Popconfirm>
+                          </div>
+                        }
+                      >
+                        <img src={dot} alt="" width={20} height={20} />
+                      </Popover>
+                    ) : (
+                      <div className="box_editButton">
+                        <button
+                          className="edit_button"
+                          style={{ backgroundColor: "red" }}
+                          onClick={cancelUpdate}
                         >
-                          <button className="dlt">Delete</button>
-                        </Popconfirm>
+                          cancel
+                        </button>
+                        <button
+                          className="edit_button"
+                          style={{ backgroundColor: "blue" }}
+                          onClick={() => handleUpdateCategory(e.id)}
+                        >
+                          update
+                        </button>
                       </div>
-                    }
-                  >
-                    <img src={dot} alt="" width={20} height={20} />
-                  </Popover>
-                ) : (
-                  <div className="box_editButton">
-                    <button
-                      className="edit_button"
-                      style={{ backgroundColor: "red" }}
-                      onClick={cancelUpdate}
-                    >
-                      cancel
-                    </button>
-                    <button
-                      className="edit_button"
-                      style={{ backgroundColor: "blue" }}
-                      onClick={() => handleUpdateCategory(e.id)}
-                    >
-                      update
-                    </button>
-                  </div>
-                )}
-              </li>
-            );
-          })
-        ) : (
-          <Result
-            status="404"
-            title="404"
-            subTitle="Sorry, the page you visited does not exist."
-          />
-        )}
-      </ul>
+                    )}
+                  </td>
+              </tr>
+            ) : (
+            <Result
+              status="404"
+              title="404"
+              subTitle="Sorry, the page you visited does not exist."
+              />
+            )}
+        </tbody>
+      </table>
     </div>
   );
 }
