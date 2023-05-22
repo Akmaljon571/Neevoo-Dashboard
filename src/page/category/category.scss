@@ -4,14 +4,11 @@
   justify-content: space-between;
   flex-wrap: wrap;
   margin-top: 32px;
-  margin-left: 92px;
 }
 
 .category_title {
-  margin-left: 92px;
   width: 492px;
   height: 40px;
-  left: 346px;
   top: 105px;
   font-family: "Inter";
   font-style: normal;
@@ -19,7 +16,7 @@
   font-size: 40px;
   line-height: 48px;
   letter-spacing: 0.02em;
-  color: #0061f7;
+  color: #01265F;
 }
 
 .span_category {
@@ -44,7 +41,7 @@
   top: 217px;
   background: #ffffff;
   border: 1px solid rgba(47, 73, 209, 0.6);
-  padding: 10px 5px;
+  padding: 10px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -105,7 +102,7 @@
   height: 48px;
   left: 1043px;
   top: 424px;
-  background: #2f49d1;
+  background: #01265F;
   border-radius: 8px;
   border: none;
   cursor: pointer;
@@ -136,4 +133,9 @@
   font-size: 18px;
   line-height: 22px;
   color: #333;
+  overflow: hidden;
+}
+
+.div__button {
+  margin-left: auto;
 }
