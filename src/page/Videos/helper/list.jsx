@@ -217,7 +217,7 @@ function ListVideo({ children }) {
             <th className="th">Ketma-Ketligi</th>
             <th className="th">More</th>
           </tr>
-        </thead>
+        </thead>  
         <tbody>
           {video.length ? (
             video.map((e, i) => (

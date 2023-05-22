@@ -178,10 +178,6 @@
       padding-left: 160px;
     }
 
-    .update_inp {
-      width: 210px;
-      height: 40px;
-    }
 
     .file_img {
       width: 100px;
@@ -190,28 +186,7 @@
       display: block;
     }
 
-    .filee {
-      width: 180px !important;
-      height: 40px;
-      background: #ffffff;
-      border: 1px solid rgba(47, 73, 209, 0.6);
-      border-radius: 8px;
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 22px;
-      cursor: pointer;
-      padding-left: 20px;
-      padding-top: 3px;
-      color: rgb(96, 98, 98);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding-right: 20px;
-      margin: -6px;
-      margin-left: 5px;
-    }
+    
 
     .flex {
       display: flex;
@@ -220,12 +195,7 @@
       margin-left: 85px;
     }
 
-    .btn_update {
-      width: 70px;
-      height: 35px;
-      font-size: 14px;
-      margin: 0;
-    }
+    
 
     li {
       height: 60px;
@@ -288,8 +258,93 @@
       }
     }
   }
-}
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.25);
+    margin-bottom: 50px;
+    overflow: auto;
+    font-weight: 600;
+    font-family: Inter;
 
+    th,
+    td {
+      text-align: center;
+      padding: 10px;
+      max-width: 100px;
+      cursor: pointer;
+    }
+
+    .updateInput {
+      padding: 5px;
+      width: 80%;
+      margin-right: 10px;
+      border: 1px solid blue;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .th {
+      background-color: #01265f;
+      font-family: Inter;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      letter-spacing: 0em;
+      text-align: center;
+      padding: 20px;
+      color: #fff;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(0, 28, 175, 0.1);
+    }
+
+    td {
+      border-bottom: 1px solid #ddd;
+    }
+    .filee {
+      width: 136px !important;
+      height: 40px;
+      background: #ffffff;
+      border: 1px solid rgba(47, 73, 209, 0.6);
+      border-radius: 8px;
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 22px;
+      cursor: pointer;
+      padding-left: 10px;
+      padding-right: 5px;
+      padding-top: 3px;
+      color: rgb(96, 98, 98);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: -6px;
+      margin-left: 50px;
+    }
+  }
+  .btn_update {
+    width: 70px;
+    height: 35px;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .update_inp {
+    width: 210px;
+    height: 40px;
+    margin-left: -56px;
+  }
+  
+}
 .upd {
   width: 80px;
   height: 30px;
@@ -310,7 +365,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {

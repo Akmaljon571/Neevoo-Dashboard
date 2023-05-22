@@ -86,9 +86,7 @@ function Course() {
   };
 
   const handleFileChange = (e) => {
-    if (e.target.files) {
       setFile(e.target.files[0]);
-    }
   };
 
   const send = (e) => {
@@ -104,8 +102,8 @@ function Course() {
     const category = categoryRef.current.value;
     const lang = langRef.current.value;
     const description = descriptionRef.current.value;
-    const filePhoto = file.current.files[0];
-
+    const filePhoto =file.current.files[0]
+  
     if (title && category && lang && description && filePhoto) {
       let formData = new FormData();
       formData.append("file", filePhoto);
@@ -158,8 +156,9 @@ function Course() {
     const course_title = titleRef.current.value;
     const course_lang = langRef.current.value;
     const course_description = descriptionRef.current.value;
-    const newFile = file.current.value;
-    if (newFile === "") {
+    const updateFile = file.current.files[0]
+   
+    if (updateFile === "") {
       fetch(host + "/courses/update/" + id, {
         method: "PATCH",
         headers: {
@@ -199,7 +198,7 @@ function Course() {
       formData.append("title", course_title);
       formData.append("lang", course_lang);
       formData.append("description", course_description);
-      formData.append("file", file);
+      formData.append("file", updateFile);
 
       fetch(host + "/courses/update/" + id, {
         method: "PATCH",
@@ -410,18 +409,179 @@ function Course() {
           </div>
         </div>
 
-        <ul>
-          <li>
-            <p style={{ display: "flex", gap: "70px", alignItems: "center" }}>
-              № <p style={{ margin: 0 }}>Image</p>
-            </p>
+        <table className="table">
+          <thead className="thead">
+            <tr className="tr">
+              <th
+                className="th"
+                style={{ textAlign: "start", paddingLeft: "30px" }}
+              >
+                №
+              </th>
+              <th
+                className="th"
+                style={{ textAlign: "start", paddingLeft: "30px" }}
+              >
+                Title
+              </th>
+              <th className="th">Language</th>
+              <th className="th">Description</th>
+              <th className="th" style={{ paddingLeft: "30px" }}>
+                Image
+              </th>
+              <th className="th">More</th>
+            </tr>
+          </thead>
 
-            <p>Title</p>
-            <p>Language</p>
-            <p>Description</p>
-            <p className="more">More</p>
-          </li>
-          {course &&
+          <tbody>
+            {course &&
+              course.map((e, i) => (
+                <tr key={i}>
+                  <td style={{ textAlign: "start", paddingLeft: "30px" }}>
+                    {++i}
+                  </td>
+                  <td>
+                    {update !== e.id ? (
+                      <p
+                        style={{
+                          fontSize: "17px",
+                          textAlign: "start",
+                          paddingLeft: "19px",
+                        }}
+                      >
+                        {e.title}
+                      </p>
+                    ) : (
+                      <input
+                        className="update_inp"
+                        ref={titleRef}
+                        defaultValue={e.title}
+                        onKeyUp={(evt) => handleKeyUp(evt, e.id)}
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {update !== e.id ? (
+                      <p style={{ fontSize: "17px" }}>{e.lang}</p>
+                    ) : (
+                      <select
+                        ref={langRef}
+                        style={{ marginLeft: "0px" }}
+                        className="update_inp"
+                      >
+                        <option value="uz">Uz</option>
+                        <option value="en">En</option>
+                        <option value="ru">Ru</option>
+                      </select>
+                    )}
+                  </td>
+                  <td>
+                    {update !== e.id ? (
+                      <p
+                        style={{
+                          height: "40px",
+                          overflow: "auto",
+                          marginTop: "7px",
+                          fontSize: "17px",
+                        }}
+                      >
+                        {e.description}
+                      </p>
+                    ) : (
+                      <input
+                        ref={descriptionRef}
+                        onKeyUp={(evt) => handleKeyUp(evt, e.id)}
+                        style={{ marginLeft: "28px" }}
+                        className="update_inp"
+                        defaultValue={e.description}
+                      />
+                    )}
+                  </td>
+                  <td>
+                    {update !== e.id ? (
+                      <img
+                        style={{
+                          borderRadius: "5px",
+                        }}
+                        src={img_url + e.image}
+                        alt=""
+                        width={50}
+                        height={50}
+                      />
+                    ) : (
+                      <label className="file_img" style={{ marginTop: "20px" }}>
+                        <p className="filee">
+                          <img
+                            style={{ margin: "0px" }}
+                            src={download}
+                            alt=""
+                          />
+                          <span style={{ overflow: "hidden" }}>
+                            {inputFile?.name ? inputFile?.name : "Rasm"}
+                          </span>
+                        </p>
+                        <input
+                          ref={file}
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                          type="file"
+                          placeholder="Yuklash"
+                        />
+                      </label>
+                    )}
+                  </td>
+                  <td>
+                    {update !== e.id ? (
+                      <Popover
+                        content={
+                          <div>
+                            <div>
+                              <button
+                                className="upd"
+                                onClick={() => handleChangeUpdate(e.id)}
+                              >
+                                Update
+                              </button>
+                            </div>
+                            <Popconfirm
+                              title="O'chirmoqchimisz?"
+                              onConfirm={() => deleteCourse(e.id)}
+                              onCancel={cancel}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <button className="dlt">Delete</button>
+                            </Popconfirm>
+                          </div>
+                        }
+                        trigger="click"
+                      >
+                        <img src={dot} alt="" width={20} height={20} />
+                      </Popover>
+                    ) : (
+                      <div className="flex">
+                        <button
+                          className="btn_update"
+                          style={{ background: "#d21111" }}
+                          onClick={handleChangeUpdate}
+                        >
+                          cancel
+                        </button>{" "}
+                        <button
+                          onClick={() => updateCourse(e.id)}
+                          className="btn_update"
+                          style={{ background: "11d255" }}
+                        >
+                          send
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+
+          {/* {course &&
             course.map((e, i) => {
               return (
                 <li
@@ -558,13 +718,9 @@ function Course() {
                   )}
                 </li>
               );
-            })}
-        </ul>
+            })} */}
+        </table>
       </div>
-      {/* {active ? (
-        <>
-        </>
-      ) : null} */}
     </>
   );
 }
